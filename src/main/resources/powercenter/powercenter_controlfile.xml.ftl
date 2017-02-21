@@ -31,7 +31,14 @@
 <IMPORTPARAMS CHECKIN_AFTER_IMPORT="YES" CHECKIN_COMMENTS="Deployit Test" RETAIN_GENERATED_VALUE="YES" COPY_SAP_PROGRAM="YES" APPLY_DEFAULT_CONNECTION="NO">
 
 <#list deployed.folderNames?keys as key>
-<FOLDERMAP SOURCEFOLDERNAME="${key}" SOURCEREPOSITORYNAME="${deployed.sourceRepository}" TARGETFOLDERNAME="${deployed.folderNames[key]}" TARGETREPOSITORYNAME="${deployed.container.repository}"/>
+<#assign cleansed_key=key?replace("u{", "")>
+<#assign cleansed_key=cleansed_key?replace("}", "")>
+<#if deployed.folderNames[cleansed_key]?has_content>
+<#assign trgtFolderName=deployed.folderNames[cleansed_key]>
+<#else>
+<#assign trgtFolderName=cleansed_key>
+</#if>
+<FOLDERMAP SOURCEFOLDERNAME="${cleansed_key}" SOURCEREPOSITORYNAME="${deployed.sourceRepository}" TARGETFOLDERNAME="${trgtFolderName}" TARGETREPOSITORYNAME="${deployed.container.repository}"/>
 </#list>
 
 

@@ -19,9 +19,16 @@ ${pmrep} connect -r ${previousDeployed.container.repository} -d ${previousDeploy
 ${exitCodeCheck}
 
 <#list previousDeployed.folderNames?keys as key>
+<#if previousDeployed.folderNames[key]?has_content>
+<#assign trgtFolderName=previousDeployed.folderNames[key]>
+<#else>
+<#assign trgtFolderName=key>
+</#if>
+<#assign trgtFolderName=trgtFolderName?replace("u{", "")>
+<#assign trgtFolderName=trgtFolderName?replace("}", "")>
 <#list previousDeployed.objectNames as objectName>
 <#list previousDeployed.objectTypes as objectType>
-${pmrep} deleteobject -o ${objectType} -f ${previousDeployed.folderNames[key]} -n ${objectName}
+${pmrep} deleteobject -o ${objectType} -f ${trgtFolderName} -n ${objectName}
 </#list>
 </#list>
 </#list>
