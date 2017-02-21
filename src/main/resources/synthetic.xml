@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS
+    FOR A PARTICULAR PURPOSE. THIS CODE AND INFORMATION ARE NOT SUPPORTED BY XEBIALABS.
+
+-->
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+
+    <type type="powercenter.PowercenterContainer" extends="udm.BaseContainer">
+        <property name="host" kind="ci" referenced-type="overthere.Host" as-containment="true" />
+        <property name="home"/>
+        <property name="repository"/>
+        <property name="domain"/>
+        <property name="userName"/>
+        <property name="password" password="true"/>
+        <property name="versioningEnabled" kind="boolean" default="false" description="If set to true, undeploy will not be executed, as pmrep deleteobject doesn't work with versioning enabled."/>
+        <method name="verifyConnection" label="Verify Connection" delegate="shellScript"
+                script="powercenter/powercenter_checkConnection"/>
+    </type>
+
+    <type type="powercenter.DeployedPowercenterXml" extends="udm.BaseDeployedArtifact"
+          deployable-type="powercenter.PowercenterXml" container-type="powercenter.PowercenterContainer"
+          description="Powercenter xml containting one or more Powercenter objects">
+        <generate-deployable type="powercenter.PowercenterXml" extends="udm.BaseDeployableFileArtifact"/>
+        <property name="sourceRepository" default="SOURCE_REPO" category="Advanced"/>
+        <property name="folderNames" kind="map_string_string"/>
+        <property name="objectNames" kind="list_of_string"/>
+        <property name="objectTypes" kind="list_of_string"/>
+    </type>
+
+
+</synthetic>
