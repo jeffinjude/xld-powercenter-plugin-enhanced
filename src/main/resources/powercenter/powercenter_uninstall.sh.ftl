@@ -18,21 +18,23 @@ fi
 ${pmrep} connect -r ${previousDeployed.container.repository} -d ${previousDeployed.container.domain} -n ${previousDeployed.container.userName} -x ${previousDeployed.container.password}
 ${exitCodeCheck}
 
-<#list previousDeployed.folderNames?keys as key>
-<#if previousDeployed.folderNames[key]?has_content>
-<#assign trgtFolderName=previousDeployed.folderNames[key]>
+<#if previousDeployed.folderNameMap?has_content>
+	<#list previousDeployed.folderNameMap?keys as key>
+		<#list previousDeployed.objectNames as objectName>
+			<#list previousDeployed.objectTypes as objectType>
+				${pmrep} deleteobject -o ${objectType} -f ${previousDeployed.folderNameMap[key]} -n ${objectName}
+			</#list>
+		</#list>
+	</#list>
 <#else>
-<#assign trgtFolderName=key>
+	<#list previousDeployed.folderNames as folderName>
+		<#list previousDeployed.objectNames as objectName>
+			<#list previousDeployed.objectTypes as objectType>
+				${pmrep} deleteobject -o ${objectType} -f ${folderName} -n ${objectName}
+			</#list>
+		</#list>
+	</#list>
 </#if>
-<#assign trgtFolderName=trgtFolderName?replace("u{", "")>
-<#assign trgtFolderName=trgtFolderName?replace("}", "")>
-<#list previousDeployed.objectNames as objectName>
-<#list previousDeployed.objectTypes as objectType>
-${pmrep} deleteobject -o ${objectType} -f ${trgtFolderName} -n ${objectName}
-</#list>
-</#list>
-</#list>
-
 
 ${exitCodeCheck}
 
