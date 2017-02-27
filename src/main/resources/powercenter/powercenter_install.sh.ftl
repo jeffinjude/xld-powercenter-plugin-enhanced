@@ -20,5 +20,23 @@ ${exitCodeCheck}
 
 echo ------------------------------------------------------------------------
 
+<#if deployed.folderNameMap?has_content>
+	<#list deployed.folderNameMap?keys as key>
+		${pmrep} createFolder -n ${deployed.folderNameMap[key]} -p 777
+		res=$?
+		if [ $res != 0 ] ; then
+			echo "Target folder ${deployed.folderNameMap[key]} already exists. Proceeding with object import."
+		fi
+	</#list>
+<#else>
+	<#list deployed.folderNames as folderName>
+		${pmrep} createFolder -n ${folderName} -p 777
+		res=$?
+		if [ $res != 0 ] ; then
+			echo "Target folder ${folderName} already exists. Proceeding with object import."
+		fi
+	</#list>
+</#if>
+
 ${pmrep} objectimport -i ${deployed.file.path}  -c powercenter/powercenter_controlfile.xml
 ${exitCodeCheck}
